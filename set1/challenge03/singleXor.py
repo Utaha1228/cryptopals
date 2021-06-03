@@ -39,10 +39,13 @@ def solveSingleXor(s):
 	pos.sort(key = lambda x: x[1], reverse = True)
 	return pos
 
+def solve(s):
+	s = bytes.fromhex(s)
+	res = solveSingleXor(s)
+	if len(res) > 5:
+		res = res[:5]
+	for x in res:
+		print(x[0], x[1])
 
-s = bytes.fromhex(input())
-res = solveSingleXor(s)
-if len(res) > 10:
-	res = res[:10]
-for x in res:
-	print(x[0], x[1])
+inputString = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
+solve(inputString)

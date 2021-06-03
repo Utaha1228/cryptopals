@@ -39,14 +39,15 @@ def solveSingleXor(s):
 	pos.sort(key = lambda x: x[1], reverse = True)
 	return pos
 
+def solve(ls):
+	pos = []
+	for i in ls:
+		pos += solveSingleXor(i)
 
+	pos.sort(key = lambda x: x[1], reverse = True)
+	for i in range(min(5, len(pos))):
+		print(pos[i][0], pos[i][1])
 
-s = open('text.txt', 'r').read()
-s = map(bytes.fromhex, s.split('\n'))
-pos = []
-for i in s:
-	pos += solveSingleXor(i)
-
-pos.sort(key = lambda x: x[1], reverse = True)
-for i in range(min(10, len(pos))):
-	print(pos[i][0], pos[i][1])
+inputString = open('text.txt', 'r').read()
+inputList = map(bytes.fromhex, inputFile.split('\n'))
+solve(inputList)

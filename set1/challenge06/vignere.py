@@ -54,7 +54,12 @@ def distance(s, t):
 	return score
 
 def scoreKeySize(cipher, sz):
-	return (distance(cipher[:sz], cipher[sz:sz+sz]) + distance(cipher[sz*2:sz*3], cipher[sz*3:sz*4])) / sz
+	times = 0
+	total = 0
+	for i in range(sz, len(cipher), sz):
+		times += 1
+		total += distance(cipher[i-sz:i], cipher[i:i+sz])
+	return total / (sz * times)
 
 def findKeySize(cipher):
 	pos = []
@@ -78,17 +83,20 @@ def solveVignere(cipher, sz):
 			idx += sz
 	return (bytes(ans), bytes(key))
 
-cipher = open('text.txt').read()
-cipher = "".join(cipher.split('\n'))
-cipher = base64.b64decode(cipher)
+def solve(ciphertext):
+	keySize = findKeySize(ciphertext)
+	possible_answer = []
+	for sz in keySize[:3]:
+		res, key = solveVignere(ciphertext, sz)
+		possible_answer.append((res, getScore(res), key))
 
-keySize = findKeySize(cipher)
-possible_answer = []
-for sz in keySize[:10]:
-	res, key = solveVignere(cipher, sz)
-	possible_answer.append((res, getScore(res), key))
+	possible_answer.sort(key = lambda x: x[1], reverse = True)
+	for ans in possible_answer:
+		print(ans[2], ans[1])
+		print(ans[0])
 
-possible_answer.sort(key = lambda x: x[1], reverse = True)
-for ans in possible_answer:
-	print(ans[2], ans[1])
-	print(ans[0])
+assert distance(b"this is a test", b"wokka wokka!!!") == 37
+inputString = open('text.txt').read()
+ciphertext = "".join(inputString.split('\n'))
+ciphertext = base64.b64decode(ciphertext)
+solve(ciphertext)
